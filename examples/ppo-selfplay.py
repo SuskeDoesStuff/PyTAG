@@ -17,7 +17,7 @@ from torch.utils.tensorboard import SummaryWriter
 from pytag import gym_wrapper
 from pytag.utils.wrappers import MergeActionMaskWrapper, RecordEpisodeStatistics
 from pytag.utils.common import make_env
-from examples.utils.networks import PPONet
+from utils.networks import PPONet
 
 class SelfPlayAssistant():
     '''
