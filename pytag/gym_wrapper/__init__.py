@@ -36,3 +36,9 @@ gym.envs.register(
      entry_point='pytag.gym_wrapper.envs:TagSingleplayerGym',
      kwargs={"game_id": "LoveLetter", "agent_ids": ["python", "random"]}
 )
+
+gym.envs.register(
+     id='TAG/Connect4-v0',
+     entry_point='pytag.gym_wrapper.envs:TagSingleplayerGym',
+     kwargs={"game_id": "Connect4", "agent_ids": ["python", "random"]}
+)
