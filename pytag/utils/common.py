@@ -19,7 +19,7 @@ def make_env(env_id, seed, opponent, n_players, framestack=1, obs_type="vector")
         env = gym.make(env_id, seed=seed, agent_ids=agent_ids, obs_type=obs_type)
         if "Stratego" in env_id:
             env = StrategoWrapper(env)
-        if "Sushi" in env_id:
+        if "Sushi" in env_id and obs_type == "json":
             env = SushiGoWrapper(env)
         if framestack > 1:
             env = FrameStack(env, framestack)
