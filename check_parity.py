@@ -1,23 +1,11 @@
-"""
-SushiGo parity check — Python side.
 
-Paste the JSON that SGParityCheck.java printed into JSON_FROM_JAVA below, and
-paste the doubleVector array into VEC_FROM_JAVA. Run this script: it processes
-the JSON through the author's exact wrapper logic and compares element by
-element against the Java vector.
-
-Run from the PyTAG repo root (so the import resolves):
-    python check_parity.py
-"""
+# Parity checker for SushiGo! It processes the JSON through the author's exact wrapper logic and compares element by element against the Java vector.
 import json
 import numpy as np
 
-# ---- paste from SGParityCheck.java output ----
 JSON_FROM_JAVA = r'''{"PlayerID":1,"opp0playedCards":"Tempura,Dumpling,Pudding","opp0score":1.0,"cardsInHand":"Tempura,SalmonNigiri,Maki-3,Sashimi,Maki-2,Maki-2,Tempura","playerScore":3.0,"nPlayers":2,"rounds":0,"playedCards":"Dumpling,Maki,Dumpling"}'''
 VEC_FROM_JAVA  = [0.0600, 0, 1, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0.0200]  # paste the [ ... ] array here (Python list literal)
-# ----------------------------------------------
 
-# The author's processing, copied verbatim from pytag/utils/wrappers.py
 CARD_TYPES = ["Maki", "Maki-2", "Maki-3", "Chopsticks", "Tempura", "Sashimi",
               "Dumpling", "SquidNigiri", "SalmonNigiri", "EggNigiri", "Wasabi", "Pudding"]
 MAX_CARDS_IN_HAND = 10
@@ -63,12 +51,12 @@ ja = np.array(VEC_FROM_JAVA, dtype=np.float32)
 
 print(f"Python length: {len(py)}   Java length: {len(ja)}")
 if len(py) != len(ja):
-    print("LENGTH MISMATCH — layouts differ. Stop here and inspect.")
+    print("LENGTH MISMATCH! layouts differ. Stop here and inspect.")
 else:
     diff = np.abs(py - ja)
     print(f"Max abs diff: {diff.max():.6e}")
     if diff.max() < 1e-4:
-        print("PARITY OK — vectors match.")
+        print("PARITY OK! vectors match.")
     else:
         bad = np.where(diff > 1e-4)[0]
         print(f"MISMATCH at {len(bad)} indices: {bad[:20].tolist()}{'...' if len(bad)>20 else ''}")

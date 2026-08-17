@@ -1,21 +1,7 @@
-"""
-Game-agnostic exporter for PyTAG PPO (PPONet) policies.
+# Exporter for PyTAG PPO (PPONet) policies.
 
-Reads a trained agent.pt and writes a plain-JSON file describing the MLP:
-    obs -> [Linear, ReLU] x N  ->  actor Linear (logits)
-plus the critic head (exported for later use as a value heuristic).
+# Reads a trained agent.pt and writes a plain-JSON file describing the MLP: obs -> [Linear, ReLU] x N  ->  actor Linear (logits) plus the critic head (exported for later use as a value heuristic).
 
-Works for ANY non-Stratego PyTAG game, because PPONet uses the same MLP shape
-for all of them (only the input/output sizes differ). Stratego (a CNN) is not
-supported here on purpose - that's the case where ONNX would be the right tool.
-
-Usage:
-    python export_weights.py <agent.pt> <out.txt>
-
-Output uses a .txt extension deliberately: the TAG JSON loader treats a ".json"
-string argument as a class-spec to recurse into, so the weights path must not
-end in .json when passed to the Java player's constructor.
-"""
 import re
 import sys
 import json
@@ -32,7 +18,7 @@ def main():
     sd = torch.load(in_path, map_location="cpu")
     sd = {k.replace("module.", "", 1): v for k, v in sd.items()}
 
-    # Refuse conv weights (4D) -> that's the Stratego/CNN case, not an MLP.
+    
     for k, v in sd.items():
         if v.ndim == 4:
             sys.exit(f"ERROR: '{k}' is a conv weight (4D). This exporter only "
@@ -62,7 +48,7 @@ def main():
         json.dump({"hidden": hidden, "actor": actor, "critic": critic, "meta": meta}, f)
     print(f"wrote {out_path}")
 
-    # ---- reference forward pass (mirror this exactly in Java to validate) ----
+    # Reference forward pass
     Ws = [np.array(h["w"]) for h in hidden]
     bs = [np.array(h["b"]) for h in hidden]
     aW, aB = np.array(actor["w"]), np.array(actor["b"])
@@ -73,13 +59,12 @@ def main():
             x = np.maximum(W @ x + b, 0.0)
         return aW @ x + aB
 
-    # Game-agnostic test inputs sized to obs_dim.
     tests = {
         "zeros": np.zeros(obs_dim),
         "ones": np.ones(obs_dim),
         "ramp": np.linspace(-1, 1, obs_dim),
     }
-    print("\n--- reference outputs (validate the Java forward pass against these) ---")
+    print("\n--- reference outputs ---")
     for name, obs in tests.items():
         logits = forward(obs)
         print(f"{name}: argmax={int(np.argmax(logits))}  "
