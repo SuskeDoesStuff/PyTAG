@@ -5,7 +5,7 @@ exports all weights for that agent into game_weights.txt
 
 
 
-#PyTAG: a Reinforcement Learning interface for the [Tabletop Games Framework](http://www.tabletopgames.ai/)
+# PyTAG: a Reinforcement Learning interface for the [Tabletop Games Framework](http://www.tabletopgames.ai/)
 
 [![license](https://img.shields.io/github/license/martinballa/PyTAG)](LICENSE)
 ![top-language](https://img.shields.io/github/languages/top/martinballa/PyTAG)
